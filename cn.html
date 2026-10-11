@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>全国硕士研究生统一招生考试成绩查询</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+        }
+        
+        body {
+            background: #f5f7fa;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        header {
+            background: #1a237e;
+            color: white;
+            padding: 25px;
+            text-align: center;
+        }
+        
+        h1 {
+            font-size: 24px;
+            margin-bottom: 8px;
+        }
+        
+        .subtitle {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        
+        .year-badge {
+            display: inline-block;
+            background: rgba(255,255,255,0.2);
+            padding: 5px 15px;
+            border-radius: 15px;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+        
+        .login-section {
+            padding: 30px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        
+        input:focus {
+            border-color: #1a237e;
+            outline: none;
+        }
+        
+        .btn {
+            width: 100%;
+            padding: 14px;
+            background: #1a237e;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        
+        .btn:hover {
+            background: #283593;
+        }
+        
+        .result-section {
+            padding: 30px;
+            display: none;
+        }
+        
+        .result-title {
+            font-size: 20px;
+            margin-bottom: 25px;
+            text-align: center;
+            color: #1a237e;
+            font-weight: 600;
+        }
+        
+        .info-line {
+            padding: 15px 0;
+            border-bottom: 1px solid #eee;
+            display: flex;
+        }
+        
+        .info-label {
+            width: 200px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .info-value {
+            flex: 1;
+            color: #1a237e;
+        }
+        
+      
+        
+        .subject-line {
+            padding: 12px 0;
+            display: flex;
+        }
+        
+        .subject-label {
+    width: 350px;  /* 增加宽度 */
+    flex-shrink: 0;  /* 防止压缩 */
+    white-space: nowrap;  /* 禁止换行 */
+}
+        
+        .subject-value {
+            flex: 1;
+            color: #1a237e;
+            font-weight: 500;
+        }
+        
+        .total-line {
+            padding: 12px 0;
+            display: flex;
+        }
+        
+        .logout-btn {
+            display: block;
+            margin: 40px auto 0;
+            padding: 12px 30px;
+            background: #6c757d;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        
+        .logout-btn:hover {
+            background: #5a6268;
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 20px;
+            border-top: 1px solid #eee;
+            color: #666;
+            font-size: 13px;
+        }
+        
+        .message {
+            padding: 12px;
+            margin: 15px 0;
+            border-radius: 5px;
+            text-align: center;
+        }
+        
+        .error {
+            background: #ffeaea;
+            color: #d32f2f;
+            border: 1px solid #ffcdd2;
+        }
+        
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>全国硕士研究生统一招生考试成绩查询</h1>
+            <p class="subtitle">2026年全国硕士研究生招生考试初试成绩查询</p>
+            <div class="year-badge">2026年</div>
+        </header>
+        
+        <section class="login-section" id="loginSection">
+            <div class="form-group">
+                <label for="name">考生姓名</label>
+                <input type="text" id="name" placeholder="请输入您的姓名" autocomplete="off">
+            </div>
+            
+            <div class="form-group">
+                <label for="studentId">准考证号</label>
+                <input type="text" id="studentId" placeholder="请输入15位准考证号" autocomplete="off">
+            </div>
+            
+            <button class="btn" id="queryBtn">查询成绩</button>
+            
+            <div id="loginMessage" class="message hidden"></div>
+        </section>
+        
+        <section class="result-section" id="resultSection">
+            <div class="result-title">2026年全国硕士研究生招生考试初试成绩</div>
+            
+            <div class="info-line">
+                <div class="info-label">姓名：</div>
+                <div class="info-value" id="resultName">-</div>
+            </div>
+            
+            <div class="info-line">
+                <div class="info-label">报名号：</div>
+                <div class="info-value" id="resultRegNumber">-</div>
+            </div>
+            
+            <div class="info-line">
+                <div class="info-label">准考证号：</div>
+                <div class="info-value" id="resultExamNumber">-</div>
+            </div>
+            
+            <div class="space-line"></div>
+            
+            <div class="total-line">
+                <div class="info-label">总分：</div>
+                <div class="info-value" id="resultTotal">-</div>
+            </div>
+            
+            <div class="subject-line">
+                <div class="subject-label">第一门：（101）思想政治理论：</div>
+                <div class="subject-value" id="politicsScore">-</div>
+            </div>
+            
+            <div class="subject-line">
+                <div class="subject-label">第二门：（204）英语（二）：</div>
+                <div class="subject-value" id="englishScore">-</div>
+            </div>
+            
+            <div class="subject-line">
+                <div class="subject-label">第三门：（333）教育综合：</div>
+                <div class="subject-value" id="mathScore">-</div>
+            </div>
+            
+            <div class="subject-line">
+                <div class="subject-label">第四门：（801）阅读与写作：</div>
+                <div class="subject-value" id="majorScore">-</div>
+            </div>
+            
+            <div class="info-line">
+                <div class="info-label">备注：</div>
+                <div class="info-value">无</div>
+            </div>
+            
+            <button class="logout-btn" id="logoutBtn">返回重新查询</button>
+        </section>
+        
+        <footer class="footer">
+            <p>© 2026 全国硕士研究生统一招生考试 成绩查询系统</p>
+            <p>主办单位：教育部教育考试院</p>
+        </footer>
+    </div>
+
+    <script>
+        // 模拟研究生考试数据库
+        const graduateExamDatabase = [
+            { 
+                id: "103456210001815", 
+                name: "方雨欣",
+                regNumber: "341399500",
+                politics: 65, 
+                english: 69, 
+                math: 100, 
+                major: 106, 
+                total: 340
+            },
+            
+        ];
+        
+        // DOM元素
+        const loginSection = document.getElementById('loginSection');
+        const resultSection = document.getElementById('resultSection');
+        const queryBtn = document.getElementById('queryBtn');
+        const logoutBtn = document.getElementById('logoutBtn');
+        const loginMessage = document.getElementById('loginMessage');
+        
+        // 查询按钮点击事件
+        queryBtn.addEventListener('click', function() {
+            const name = document.getElementById('name').value.trim();
+            const studentId = document.getElementById('studentId').value.trim();
+            
+            // 验证输入
+            if (!name || !studentId) {
+                showMessage('请输入考生姓名和准考证号', 'error');
+                return;
+            }
+            
+            // 查找考生
+            const student = findStudent(name, studentId);
+            
+            if (student) {
+                // 显示考生成绩
+                displayStudentResult(student);
+                loginSection.style.display = 'none';
+                resultSection.style.display = 'block';
+            } else {
+                showMessage('未找到匹配的成绩信息，请检查姓名和准考证号是否正确', 'error');
+            }
+        });
+        
+        // 返回按钮点击事件
+        logoutBtn.addEventListener('click', function() {
+            // 清空输入框
+            document.getElementById('name').value = '';
+            document.getElementById('studentId').value = '';
+            
+            // 隐藏结果，显示登录界面
+            resultSection.style.display = 'none';
+            loginSection.style.display = 'block';
+            
+            // 清空消息
+            loginMessage.classList.add('hidden');
+        });
+        
+        // 按回车键查询
+        document.getElementById('studentId').addEventListener('keyup', function(event) {
+            if (event.key === 'Enter') {
+                queryBtn.click();
+            }
+        });
+        
+        // 查找考生函数
+        function findStudent(name, id) {
+            return graduateExamDatabase.find(student => 
+                student.name === name && student.id === id
+            );
+        }
+        
+        // 显示考生成绩
+        function displayStudentResult(student) {
+            document.getElementById('resultName').textContent = student.name;
+            document.getElementById('resultRegNumber').textContent = student.regNumber;
+            document.getElementById('resultExamNumber').textContent = student.id;
+            document.getElementById('resultTotal').textContent = student.total;
+            document.getElementById('politicsScore').textContent = student.politics;
+            document.getElementById('englishScore').textContent = student.english;
+            document.getElementById('mathScore').textContent = student.math;
+            document.getElementById('majorScore').textContent = student.major;
+        }
+        
+        // 显示消息
+        function showMessage(text, type) {
+            loginMessage.textContent = text;
+            loginMessage.className = 'message';
+            
+            if (type === 'error') {
+                loginMessage.classList.add('error');
+            }
+            
+            loginMessage.classList.remove('hidden');
+            
+            // 3秒后自动隐藏消息
+            setTimeout(() => {
+                loginMessage.classList.add('hidden');
+            }, 3000);
+        }
+        
+          
+        
+    </script>
+</body>
+</html>
